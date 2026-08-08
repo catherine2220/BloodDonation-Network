@@ -1,0 +1,2 @@
+
+The Blood Donation Network and Emergency Matching Platform is a Java-based application that helps connect blood donors, patients, and hospitals during emergencies. It enables donors to register their details, allows patients to search for matching blood groups, and manages donor records efficiently. The system is designed to reduce the time required to find suitable blood donors and improve emergency response. This project demonstrates the use of Java, Object-Oriented Programming (OOP), and Java Collections to build a simple blood bank management system.

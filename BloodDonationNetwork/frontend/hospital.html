@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Registration - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hospital-container {
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .hospital-card {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .hospital-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .hospital-card input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .hospital-card button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>BloodConnect</h1>
+</header>
+
+<div class="hospital-container">
+
+    <div class="hospital-card">
+
+        <h2>🏥 Hospital Registration</h2>
+
+        <form id="hospitalForm">
+
+            <input
+                type="text"
+                id="hospitalName"
+                placeholder="Hospital Name"
+                required
+            >
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Location"
+                required
+            >
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+            >
+
+            <button type="submit">
+                Register Hospital
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+document.getElementById("hospitalForm").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const hospital = {
+        hospitalName: document.getElementById("hospitalName").value,
+        location: document.getElementById("location").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value
+    };
+
+    const response = await fetch("http://localhost:8080/hospitals", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(hospital)
+    });
+
+    if (response.ok) {
+        alert("Hospital registered successfully!");
+        document.getElementById("hospitalForm").reset();
+    } else {
+        alert("Failed to register hospital.");
+    }
+
+});
+</script>
+
+</body>
+</html>

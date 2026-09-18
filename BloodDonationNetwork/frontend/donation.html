@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Record Donation - BloodConnect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="donation.html">Record Donation</a>
+        <a href="status.html">Request Status</a>
+        <a href="contact.html">Contact</a>
+    </div>
+</nav>
+
+<section class="about">
+
+    <h2>Record Blood Donation</h2>
+
+    <div class="card" style="width: 500px; margin: auto;">
+
+        <form id="donationForm">
+
+            <input type="number" id="donorId"
+                   placeholder="Donor ID" required><br><br>
+
+            <input type="number" id="requestId"
+                   placeholder="Request ID" required><br><br>
+
+            <input type="date" id="donationDate" required><br><br>
+
+            <input type="number" id="unitsDonated"
+                   placeholder="Units Donated" required><br><br>
+
+            <select id="matchStatus" required>
+                <option value="">Match Status</option>
+                <option>Matched</option>
+                <option>Completed</option>
+            </select><br><br>
+
+            <button type="submit">Record Donation</button>
+
+        </form>
+
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+</footer>
+
+<script>
+
+document.getElementById("donationForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const donation = {
+        donorId: document.getElementById("donorId").value,
+        requestId: document.getElementById("requestId").value,
+        donationDate: document.getElementById("donationDate").value,
+        unitsDonated: document.getElementById("unitsDonated").value,
+        matchStatus: document.getElementById("matchStatus").value
+    };
+
+    fetch("http://localhost:8080/donations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(donation)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Donation recorded successfully!");
+        document.getElementById("donationForm").reset();
+    })
+    .catch(error => {
+        alert("Error recording donation!");
+        console.error(error);
+    });
+
+});
+
+</script>
+
+</body>
+</html>

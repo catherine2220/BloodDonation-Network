@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BloodConnect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="login.html">Login</a>
+    </div>
+</nav>
+
+<section class="about">
+    <h2>Login</h2>
+
+    <div class="card" style="width: 400px; margin: auto;">
+
+        <form onsubmit="loginUser(event)">
+            <input type="email" id="email" placeholder="Email Address" required>
+
+<br><br>
+
+<input type="password" id="password" placeholder="Password" required>
+
+            <br><br>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <p style="margin-top: 20px;">
+            New user? <a href="signup.html">Create an Account</a>
+        </p>
+
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+</footer>
+<script>
+
+function loginUser(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    fetch("http://localhost:8080/users")
+        .then(response => response.json())
+        .then(users => {
+
+            const user = users.find(u =>
+                u.email === email && u.password === password
+            );
+
+            if (user) {
+                alert("Login successful!");
+                window.location.href = "index.html";
+            } else {
+                alert("Invalid email or password!");
+            }
+
+        })
+        .catch(error => {
+            alert("Error during login!");
+            console.error(error);
+        });
+}
+
+</script>
+</html>

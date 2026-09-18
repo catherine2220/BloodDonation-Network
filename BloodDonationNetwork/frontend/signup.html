@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .signup-section {
+            min-height: 600px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .signup-section h2 {
+            color: #b22222;
+            margin-bottom: 25px;
+        }
+
+        .signup-card {
+            width: 420px;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .signup-card input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .signup-card button {
+            padding: 12px 28px;
+            background: #b22222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .signup-card button:hover {
+            opacity: 0.85;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html">Login</a>
+
+    </div>
+
+</nav>
+
+
+<section class="signup-section">
+
+    <h2>Create Account</h2>
+
+    <div class="signup-card">
+
+        <form onsubmit="signupUser(event)">
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Create Password"
+                required
+            >
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                required
+            >
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+
+        <p style="margin-top: 20px;">
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+<script>
+
+function signupUser(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("name").value;
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    if (password !== confirmPassword) {
+
+        alert("Passwords do not match!");
+
+        return;
+    }
+
+
+    const user = {
+
+        name: name,
+        email: email,
+        password: password
+
+    };
+
+
+    fetch("http://localhost:8080/users", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json"
+
+        },
+
+        body: JSON.stringify(user)
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error("Signup failed");
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        alert("Account created successfully!");
+
+        window.location.href = "login.html";
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Error creating account!");
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .request-container {
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .request-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .request-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .request-card input,
+        .request-card select {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .request-card button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>BloodConnect</h1>
+</header>
+
+<div class="request-container">
+
+    <div class="request-card">
+
+        <h2>🩸 Request Blood</h2>
+
+        <form id="requestForm">
+
+            <input
+                type="number"
+                id="patientId"
+                placeholder="Patient ID"
+                required
+            >
+
+            <input
+                type="text"
+                id="patientName"
+                placeholder="Patient Name"
+                required
+            >
+
+            <input
+                type="number"
+                id="patientAge"
+                placeholder="Patient Age"
+                required
+            >
+
+            <select id="bloodGroup" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+            </select>
+
+            <input
+                type="number"
+                id="unitsRequired"
+                placeholder="Units Required"
+                required
+            >
+
+            <input
+                type="text"
+                id="hospitalName"
+                placeholder="Hospital Name"
+                required
+            >
+
+            <input
+                type="text"
+                id="hospitalLocation"
+                placeholder="Hospital Location"
+                required
+            >
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                required
+            >
+
+            <select id="urgencyLevel" required>
+                <option value="">Select Urgency Level</option>
+                <option value="Emergency">Emergency</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Normal">Normal</option>
+            </select>
+
+            <button type="submit">
+                Request Blood
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+document.getElementById("requestForm").addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const request = {
+        patientId: parseInt(document.getElementById("patientId").value),
+        patientName: document.getElementById("patientName").value,
+        patientAge: parseInt(document.getElementById("patientAge").value),
+        bloodGroup: document.getElementById("bloodGroup").value,
+        unitsRequired: parseInt(document.getElementById("unitsRequired").value),
+        hospitalName: document.getElementById("hospitalName").value,
+        hospitalLocation: document.getElementById("hospitalLocation").value,
+        phone: document.getElementById("phone").value,
+        urgencyLevel: document.getElementById("urgencyLevel").value
+    };
+
+    const response = await fetch("http://localhost:8080/blood-requests", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request)
+    });
+
+    if (response.ok) {
+        alert("Blood request submitted successfully!");
+        document.getElementById("requestForm").reset();
+    } else {
+        alert("Failed to submit blood request.");
+    }
+
+});
+</script>
+
+</body>
+</html>

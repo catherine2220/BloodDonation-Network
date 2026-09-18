@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Donor - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .find-section {
+            min-height: 600px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .find-section h2 {
+            color: #b22222;
+            margin-bottom: 25px;
+        }
+
+        .find-card {
+            width: 420px;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .find-card select,
+        .find-card input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .find-card button {
+            padding: 12px 28px;
+            background: #b22222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .find-card button:hover {
+            opacity: 0.85;
+        }
+
+        #result {
+            margin-top: 25px;
+        }
+
+        .donor-card {
+            margin: 15px auto;
+            padding: 18px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .donor-card h3 {
+            color: #b22222;
+            margin-top: 0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="donation.html">Record Donation</a>
+        <a href="status.html">Request Status</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+</nav>
+
+
+<section class="find-section">
+
+    <h2>Find Blood Donor</h2>
+
+    <div class="find-card">
+
+        <select id="bloodGroup" required>
+
+            <option value="">Select Blood Group</option>
+
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+
+        </select>
+
+        <input
+            type="text"
+            id="location"
+            placeholder="Enter Location"
+            required
+        >
+
+        <button onclick="findDonor()">
+            Search Donor
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+<script>
+
+function findDonor() {
+
+    const bloodGroup =
+        document.getElementById("bloodGroup").value;
+
+    const location =
+        document.getElementById("location").value;
+
+    if (bloodGroup === "" || location === "") {
+
+        alert("Please select blood group and enter location!");
+
+        return;
+    }
+
+    fetch(
+        `http://localhost:8080/match?bloodGroup=${encodeURIComponent(bloodGroup)}&location=${encodeURIComponent(location)}`
+    )
+
+    .then(response => response.json())
+
+    .then(donors => {
+
+        const result =
+            document.getElementById("result");
+
+        if (donors.length === 0) {
+
+            result.innerHTML =
+                "<p>No donor found.</p>";
+
+            return;
+        }
+
+        result.innerHTML = "";
+
+        donors.forEach(donor => {
+
+            result.innerHTML += `
+
+                <div class="donor-card">
+
+                    <h3>${donor.name}</h3>
+
+                    <p>
+                        Blood Group: ${donor.bloodGroup}
+                    </p>
+
+                    <p>
+                        Location: ${donor.location}
+                    </p>
+
+                    <p>
+                        Phone: ${donor.phone}
+                    </p>
+
+                    <p>
+                        Email: ${donor.email}
+                    </p>
+
+                    <p>
+                        Status: ${donor.availability}
+                    </p>
+
+                </div>
+
+            `;
+
+        });
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Error finding donor!");
+
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>

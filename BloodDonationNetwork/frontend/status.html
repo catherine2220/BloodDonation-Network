@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Status - BloodConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .status-section {
+            min-height: 600px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .status-section h2 {
+            color: #b22222;
+            margin-bottom: 30px;
+        }
+
+        #result {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .status-card {
+            width: 360px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+
+        .status-card h3 {
+            color: #b22222;
+            margin-top: 0;
+        }
+
+        .status-card p {
+            margin: 8px 0;
+        }
+
+        .status {
+            font-weight: bold;
+            color: #008000;
+        }
+
+        .emergency {
+            color: #d00000;
+            font-weight: bold;
+        }
+
+        .urgent {
+            color: #e67e00;
+            font-weight: bold;
+        }
+
+        .normal {
+            color: #008000;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="donation.html">Record Donation</a>
+        <a href="status.html">Request Status</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+</nav>
+
+
+<section class="status-section">
+
+    <h2>Blood Request Status</h2>
+
+    <div id="result"></div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+<script>
+
+fetch("http://localhost:8080/blood-requests")
+
+.then(response => response.json())
+
+.then(requests => {
+
+    const result = document.getElementById("result");
+
+    if (requests.length === 0) {
+
+        result.innerHTML =
+            "<p>No blood requests found.</p>";
+
+        return;
+    }
+
+    requests.forEach(request => {
+
+        let urgencyClass =
+            request.urgencyLevel.toLowerCase();
+
+        result.innerHTML += `
+
+            <div class="status-card">
+
+                <h3>
+                    Patient: ${request.patientName}
+                </h3>
+
+                <p>
+                    Blood Group: ${request.bloodGroup}
+                </p>
+
+                <p>
+                    Units Required: ${request.unitsRequired}
+                </p>
+
+                <p>
+                    Hospital: ${request.hospitalName}
+                </p>
+
+                <p>
+                    Location: ${request.hospitalLocation}
+                </p>
+
+                <p>
+                    Urgency:
+                    <span class="${urgencyClass}">
+                        ${request.urgencyLevel}
+                    </span>
+                </p>
+
+                <p>
+                    Status:
+                    <span class="status">
+                        ${request.status}
+                    </span>
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+})
+
+.catch(error => {
+
+    console.error(error);
+
+    document.getElementById("result").innerHTML =
+        "<p>Error loading request status.</p>";
+
+});
+
+</script>
+
+</body>
+</html>

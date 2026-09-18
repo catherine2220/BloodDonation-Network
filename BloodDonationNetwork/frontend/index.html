@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BloodConnect - Save a Life</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .home-hero {
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .home-hero h1 {
+            font-size: 52px;
+            margin-bottom: 25px;
+            color: #b22222;
+            font-weight: bold;
+        }
+
+        .home-hero p {
+            font-size: 20px;
+            max-width: 750px;
+            line-height: 1.7;
+            margin-bottom: 45px;
+        }
+
+        .home-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .home-buttons a {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            background-color: #b22222;
+            color: white;
+        }
+
+        .home-buttons a:hover {
+            opacity: 0.85;
+        }
+
+        .how-section {
+            text-align: center;
+            padding: 55px 20px;
+        }
+
+        .how-section h2 {
+            color: #b22222;
+            font-size: 32px;
+            margin-bottom: 35px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 250px;
+            padding: 25px;
+        }
+
+        @media (max-width: 700px) {
+
+            .home-hero h1 {
+                font-size: 38px;
+            }
+
+            .home-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="donation.html">Record Donation</a>
+        <a href="status.html">Request Status</a>
+        <a href="contact.html">Contact</a>
+        <a href="hospital.html">Hospital</a>
+        <a href="patient.html">Patient</a>
+
+    </div>
+
+</nav>
+
+
+<!-- HOME SECTION -->
+
+<section class="home-hero">
+
+    <h1>Save a Life, Donate Blood</h1>
+
+    <p>
+        Connect blood donors with patients in emergency situations,
+        where one donation can save a life.
+    </p>
+
+    <div class="home-buttons">
+
+        <a href="donate.html">Become a Donor</a>
+
+        <a href="request.html">Request Blood</a>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+
+<section class="how-section">
+
+    <h2>How It Works</h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>👤 Register</h3>
+
+            <p>
+                Donors can register their details and blood group.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>🩸 Find Blood</h3>
+
+            <p>
+                Patients can search for available blood donors.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>🚨 Emergency Match</h3>
+
+            <p>
+                Our system helps match donors with urgent requests.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+</body>
+
+</html>

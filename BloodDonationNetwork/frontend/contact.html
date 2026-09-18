@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .contact-section {
+            min-height: 600px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            color: #b22222;
+            margin-bottom: 25px;
+        }
+
+        .contact-card {
+            width: 420px;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .contact-card input,
+        .contact-card textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .contact-card textarea {
+            resize: vertical;
+        }
+
+        .contact-card button {
+            padding: 12px 28px;
+            background: #b22222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contact-card button:hover {
+            opacity: 0.85;
+        }
+
+        .contact-info {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="donate.html">Donate Blood</a>
+
+        <a href="request.html">Request Blood</a>
+
+        <a href="find.html">Find Donor</a>
+
+        <a href="donation.html">Record Donation</a>
+
+        <a href="status.html">Request Status</a>
+
+        <a href="contact.html">Contact</a>
+
+        <a href="login.html">Login</a>
+
+    </div>
+
+</nav>
+
+
+<section class="contact-section">
+
+    <h2>Contact Us</h2>
+
+    <div class="contact-card">
+
+        <form onsubmit="sendMessage(event)">
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Your Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Your Email"
+                required
+            >
+
+            <input
+                type="text"
+                id="subject"
+                placeholder="Subject"
+                required
+            >
+
+            <textarea
+                id="message"
+                rows="5"
+                placeholder="Your Message"
+                required
+            ></textarea>
+
+            <button type="submit">
+                Send Message
+            </button>
+
+        </form>
+
+
+        <div class="contact-info">
+
+            <p>📞 Phone: +91 98765 43210</p>
+
+            <p>📧 Email: bloodconnect@gmail.com</p>
+
+            <p>📍 Location: Tamil Nadu, India</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+<script>
+
+function sendMessage(event) {
+
+    event.preventDefault();
+
+    alert("Message sent successfully!");
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("subject").value = "";
+    document.getElementById("message").value = "";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

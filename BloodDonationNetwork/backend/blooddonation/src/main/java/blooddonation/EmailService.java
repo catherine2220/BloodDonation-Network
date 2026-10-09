@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 @Service
+@ConditionalOnBean(JavaMailSender.class)
 public class EmailService {
 
     private final JavaMailSender mailSender;
@@ -24,7 +26,7 @@ public class EmailService {
         }
 
         if (fromEmail == null || fromEmail.isBlank()) {
-            throw new IllegalStateException("Email sender is not configured");
+            return;
         }
 
         SimpleMailMessage message = new SimpleMailMessage();

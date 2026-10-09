@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Donation Requests - BloodConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .request-section {
+            min-height: 600px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .request-section h2 {
+            color: #b22222;
+            margin-bottom: 25px;
+        }
+
+        .request-card {
+            width: 450px;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+
+        .request-card h3 {
+            color: #b22222;
+            margin-top: 0;
+        }
+
+        .request-card p {
+            margin: 12px 0;
+        }
+
+        .accept-btn,
+        .reject-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 8px;
+        }
+
+        .accept-btn {
+            background: green;
+        }
+
+        .reject-btn {
+            background: #b22222;
+        }
+
+        .accept-btn:hover,
+        .reject-btn:hover {
+            opacity: 0.85;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🩸 BloodConnect</h2>
+
+    <div class="nav-links">
+
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate Blood</a>
+        <a href="request.html">Request Blood</a>
+        <a href="find.html">Find Donor</a>
+        <a href="donation.html">Record Donation</a>
+        <a href="status.html">Request Status</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+</nav>
+
+
+<section class="request-section">
+
+    <h2>Blood Donation Request</h2>
+
+    <div class="request-card">
+
+        <h3>🩸 Donor Request</h3>
+
+        <p>
+            <strong>Donor:</strong>
+            <span id="donorName"></span>
+        </p>
+
+        <p>
+            <strong>Blood Group:</strong>
+            <span id="bloodGroup"></span>
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            <span id="location"></span>
+        </p>
+
+        <p>
+            <strong>Phone:</strong>
+            <span id="phone"></span>
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            <span id="email"></span>
+        </p>
+
+        <p>
+            <strong>Patient:</strong>
+            <span id="patientName"></span>
+        </p>
+
+        <p>
+            <strong>Units Required:</strong>
+            <span id="unitsRequired"></span>
+        </p>
+
+        <p>
+            <strong>Hospital:</strong>
+            <span id="hospitalName"></span>
+        </p>
+
+        <p>
+            <strong>Hospital Location:</strong>
+            <span id="hospitalLocation"></span>
+        </p>
+
+        <p>
+            <strong>Urgency:</strong>
+            <span id="urgencyLevel"></span>
+        </p>
+
+        <button
+            class="accept-btn"
+            onclick="acceptRequest()">
+
+            Accept Request
+
+        </button>
+
+        <button
+            class="reject-btn"
+            onclick="rejectRequest()">
+
+            Reject Request
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>© 2026 BloodConnect | Blood Donation Network</p>
+
+</footer>
+
+
+<script>
+
+/* Get selected donor */
+
+const savedDonor =
+    sessionStorage.getItem("selectedDonor");
+
+
+/* Get actual request details */
+
+const requestId =
+    sessionStorage.getItem("requestId");
+
+const patientName =
+    sessionStorage.getItem("patientName");
+
+const bloodGroup =
+    sessionStorage.getItem("bloodGroup");
+
+const unitsRequired =
+    sessionStorage.getItem("unitsRequired");
+
+const hospitalName =
+    sessionStorage.getItem("hospitalName");
+
+const hospitalLocation =
+    sessionStorage.getItem("hospitalLocation");
+
+const urgencyLevel =
+    sessionStorage.getItem("urgencyLevel");
+
+
+/* Check donor */
+
+if (!savedDonor) {
+
+    alert("Donor details not found!");
+
+    window.location.href =
+        "find.html";
+
+}
+
+
+/* Check request */
+
+if (!requestId) {
+
+    alert("Blood request details not found!");
+
+    window.location.href =
+        "request.html";
+
+}
+
+
+/* Display donor */
+
+if (savedDonor) {
+
+    const donor =
+        JSON.parse(savedDonor);
+
+    document.getElementById("donorName").textContent =
+        donor.name;
+
+    document.getElementById("bloodGroup").textContent =
+        donor.bloodGroup;
+
+    document.getElementById("location").textContent =
+        donor.location;
+
+    document.getElementById("phone").textContent =
+        donor.phone;
+
+    document.getElementById("email").textContent =
+        donor.email;
+
+}
+
+
+/* Display request details */
+
+document.getElementById("patientName").textContent =
+    patientName || "";
+
+document.getElementById("unitsRequired").textContent =
+    unitsRequired || "";
+
+document.getElementById("hospitalName").textContent =
+    hospitalName || "";
+
+document.getElementById("hospitalLocation").textContent =
+    hospitalLocation || "";
+
+document.getElementById("urgencyLevel").textContent =
+    urgencyLevel || "";
+
+
+/* ACCEPT REQUEST */
+
+async function acceptRequest() {
+
+    const donor =
+        JSON.parse(
+            sessionStorage.getItem("selectedDonor")
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8080/blood-requests/" +
+                requestId +
+                "/status?status=Matched",
+                {
+                    method: "PUT"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to update request status"
+            );
+
+        }
+
+        alert(
+            "Donation request accepted by " +
+            donor.name + "!"
+        );
+
+        window.location.href =
+            "status.html?status=Matched&donorName=" +
+            encodeURIComponent(donor.name);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error accepting donation request!"
+        );
+
+    }
+
+}
+
+
+/* REJECT REQUEST */
+
+async function rejectRequest() {
+
+    const donor =
+        JSON.parse(
+            sessionStorage.getItem("selectedDonor")
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8080/blood-requests/" +
+                requestId +
+                "/status?status=Rejected",
+                {
+                    method: "PUT"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to update request status"
+            );
+
+        }
+
+        alert(
+            "Donation request rejected by " +
+            donor.name + "!"
+        );
+
+        sessionStorage.removeItem(
+            "selectedDonor"
+        );
+
+        window.location.href =
+            "status.html?status=Rejected&donorName=" +
+            encodeURIComponent(donor.name);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error rejecting donation request!"
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

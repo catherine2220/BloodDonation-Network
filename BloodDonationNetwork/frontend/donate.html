@@ -99,8 +99,12 @@ document.getElementById("donorForm").addEventListener("submit", function(event) 
     })
     .then(response => response.json())
     .then(data => {
+
         alert("Donor registered successfully!");
-        document.getElementById("donorForm").reset();
+
+        // Success message-la OK click pannina Home page-ku pogum
+        window.location.href = "index.html";
+
     })
     .catch(error => {
         alert("Error registering donor!");

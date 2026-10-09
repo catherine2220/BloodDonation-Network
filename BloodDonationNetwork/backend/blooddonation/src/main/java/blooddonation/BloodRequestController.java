@@ -26,4 +26,19 @@ public class BloodRequestController {
     public List<BloodRequest> getRequests() {
         return bloodRequestRepository.findAll();
     }
+
+    @PutMapping("/{id}/status")
+    public BloodRequest updateStatus(
+            @PathVariable Integer id,
+            @RequestParam String status) {
+
+        BloodRequest request =
+                bloodRequestRepository.findById(id)
+                .orElseThrow(() ->
+                    new RuntimeException("Request not found"));
+
+        request.setStatus(status);
+
+        return bloodRequestRepository.save(request);
+    }
 }

@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,26 +67,11 @@
 
         <form id="requestForm">
 
-            <input
-                type="number"
-                id="patientId"
-                placeholder="Patient ID"
-                required
-            >
+            <input type="text" id="patientName"
+                   placeholder="Patient Name" required>
 
-            <input
-                type="text"
-                id="patientName"
-                placeholder="Patient Name"
-                required
-            >
-
-            <input
-                type="number"
-                id="patientAge"
-                placeholder="Patient Age"
-                required
-            >
+            <input type="number" id="patientAge"
+                   placeholder="Patient Age" required>
 
             <select id="bloodGroup" required>
                 <option value="">Select Blood Group</option>
@@ -99,33 +85,17 @@
                 <option value="AB-">AB-</option>
             </select>
 
-            <input
-                type="number"
-                id="unitsRequired"
-                placeholder="Units Required"
-                required
-            >
+            <input type="number" id="unitsRequired"
+                   placeholder="Units Required" required>
 
-            <input
-                type="text"
-                id="hospitalName"
-                placeholder="Hospital Name"
-                required
-            >
+            <input type="text" id="hospitalName"
+                   placeholder="Hospital Name" required>
 
-            <input
-                type="text"
-                id="hospitalLocation"
-                placeholder="Hospital Location"
-                required
-            >
+            <input type="text" id="hospitalLocation"
+                   placeholder="Hospital Location" required>
 
-            <input
-                type="tel"
-                id="phone"
-                placeholder="Phone Number"
-                required
-            >
+            <input type="tel" id="phone"
+                   placeholder="Phone Number" required>
 
             <select id="urgencyLevel" required>
                 <option value="">Select Urgency Level</option>
@@ -145,39 +115,162 @@
 </div>
 
 <script>
-document.getElementById("requestForm").addEventListener("submit", async function(e) {
+
+document.getElementById("requestForm")
+.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
+    /*
+       First URL-la patientId check pannum.
+       URL-la illa na sessionStorage-la check pannum.
+    */
+
+    const urlParams =
+        new URLSearchParams(window.location.search);
+
+    let patientId =
+        urlParams.get("patientId");
+
+    if (!patientId) {
+
+        patientId =
+            sessionStorage.getItem("patientId");
+    }
+
+    /*
+       Rendu place-layum ID illa na mattum error
+    */
+
+    if (!patientId) {
+
+        alert(
+            "Patient details not found. Please register again."
+        );
+
+        window.location.href =
+            "patient.html";
+
+        return;
+    }
+
     const request = {
-        patientId: parseInt(document.getElementById("patientId").value),
-        patientName: document.getElementById("patientName").value,
-        patientAge: parseInt(document.getElementById("patientAge").value),
-        bloodGroup: document.getElementById("bloodGroup").value,
-        unitsRequired: parseInt(document.getElementById("unitsRequired").value),
-        hospitalName: document.getElementById("hospitalName").value,
-        hospitalLocation: document.getElementById("hospitalLocation").value,
-        phone: document.getElementById("phone").value,
-        urgencyLevel: document.getElementById("urgencyLevel").value
+
+        patientId: parseInt(patientId),
+
+        patientName:
+            document.getElementById("patientName").value,
+
+        patientAge:
+            parseInt(
+                document.getElementById("patientAge").value
+            ),
+
+        bloodGroup:
+            document.getElementById("bloodGroup").value,
+
+        unitsRequired:
+            parseInt(
+                document.getElementById("unitsRequired").value
+            ),
+
+        hospitalName:
+            document.getElementById("hospitalName").value,
+
+        hospitalLocation:
+            document.getElementById("hospitalLocation").value,
+
+        phone:
+            document.getElementById("phone").value,
+
+        urgencyLevel:
+            document.getElementById("urgencyLevel").value
     };
 
-    const response = await fetch("http://localhost:8080/blood-requests", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request)
-    });
+    try {
 
-    if (response.ok) {
-        alert("Blood request submitted successfully!");
-        document.getElementById("requestForm").reset();
-    } else {
-        alert("Failed to submit blood request.");
+        const response =
+            await fetch(
+                "http://localhost:8080/blood-requests",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(request)
+                }
+            );
+
+        if (response.ok) {
+
+            const savedRequest =
+                await response.json();
+
+            sessionStorage.setItem(
+                "requestId",
+                savedRequest.requestId
+            );
+
+            sessionStorage.setItem(
+                "patientName",
+                savedRequest.patientName
+            );
+
+            sessionStorage.setItem(
+                "bloodGroup",
+                savedRequest.bloodGroup
+            );
+
+            sessionStorage.setItem(
+                "unitsRequired",
+                savedRequest.unitsRequired
+            );
+
+            sessionStorage.setItem(
+                "hospitalName",
+                savedRequest.hospitalName
+            );
+
+            sessionStorage.setItem(
+                "hospitalLocation",
+                savedRequest.hospitalLocation
+            );
+
+            sessionStorage.setItem(
+                "urgencyLevel",
+                savedRequest.urgencyLevel
+            );
+
+            alert(
+                "Blood request submitted successfully!"
+            );
+
+            // After submitting request, go to Find Donor
+            window.location.href =
+                "find.html";
+
+        } else {
+
+            alert(
+                "Failed to submit blood request."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server. Please check the backend."
+        );
     }
 
 });
+
 </script>
 
 </body>
 </html>
+```

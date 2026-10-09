@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Patient Registration - BloodConnect</title>
 
     <link rel="stylesheet" href="style.css">
@@ -114,7 +116,7 @@
             >
 
             <button type="submit">
-                Register Patient
+                Submit
             </button>
 
         </form>
@@ -124,35 +126,105 @@
 </div>
 
 <script>
-document.getElementById("patientForm").addEventListener("submit", async function(e) {
+
+document.getElementById("patientForm")
+.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
     const patient = {
-        name: document.getElementById("name").value,
-        age: parseInt(document.getElementById("age").value),
-        gender: document.getElementById("gender").value,
-        bloodGroup: document.getElementById("bloodGroup").value,
-        phone: document.getElementById("phone").value,
-        hospitalId: parseInt(document.getElementById("hospitalId").value)
+
+        name:
+            document.getElementById("name").value,
+
+        age:
+            parseInt(
+                document.getElementById("age").value
+            ),
+
+        gender:
+            document.getElementById("gender").value,
+
+        bloodGroup:
+            document.getElementById("bloodGroup").value,
+
+        phone:
+            document.getElementById("phone").value,
+
+        hospitalId:
+            parseInt(
+                document.getElementById("hospitalId").value
+            )
     };
 
-    const response = await fetch("http://localhost:8080/patients", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(patient)
-    });
+    try {
 
-    if (response.ok) {
-        alert("Patient registered successfully!");
-        document.getElementById("patientForm").reset();
-    } else {
-        alert("Failed to register patient.");
+        const response =
+            await fetch(
+                "http://localhost:8080/patients",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(patient)
+                }
+            );
+
+        if (response.ok) {
+
+            const savedPatient =
+                await response.json();
+
+            /* Save Patient ID */
+
+            sessionStorage.setItem(
+                "patientId",
+                savedPatient.patientId
+            );
+
+            /* Check Patient ID */
+
+            if (!savedPatient.patientId) {
+
+                alert(
+                    "Patient registered, but Patient ID was not received."
+                );
+
+                return;
+            }
+
+            alert(
+                "Patient registered successfully!\n\nPatient ID: "
+                + savedPatient.patientId
+            );
+
+            /* Go to Request Blood page */
+
+            window.location.href =
+                "request.html?patientId="
+                + savedPatient.patientId;
+
+        } else {
+
+            alert(
+                "Failed to register patient."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server. Please check the backend."
+        );
     }
 
 });
+
 </script>
 
 </body>

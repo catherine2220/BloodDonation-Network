@@ -69,11 +69,34 @@
             border-radius: 8px;
             text-align: left;
             border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .donor-card:hover {
+            background: #fff0f0;
         }
 
         .donor-card h3 {
             color: #b22222;
             margin-top: 0;
+        }
+
+        .donor-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .request-btn {
+            margin-top: 10px;
+            padding: 10px 18px;
+            background: #b22222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
     </style>
@@ -155,7 +178,7 @@ function findDonor() {
         document.getElementById("bloodGroup").value;
 
     const location =
-        document.getElementById("location").value;
+        document.getElementById("location").value.trim();
 
     if (bloodGroup === "" || location === "") {
 
@@ -164,70 +187,164 @@ function findDonor() {
         return;
     }
 
-    fetch(
-        `http://localhost:8080/match?bloodGroup=${encodeURIComponent(bloodGroup)}&location=${encodeURIComponent(location)}`
-    )
+    const url =
+        "http://localhost:8080/match?bloodGroup="
+        + encodeURIComponent(bloodGroup)
+        + "&location="
+        + encodeURIComponent(location);
 
-    .then(response => response.json())
+    fetch(url)
 
-    .then(donors => {
+        .then(response => {
 
-        const result =
-            document.getElementById("result");
+            if (!response.ok) {
+                throw new Error("Backend error");
+            }
 
-        if (donors.length === 0) {
+            return response.json();
 
-            result.innerHTML =
-                "<p>No donor found.</p>";
+        })
 
-            return;
-        }
+        .then(donors => {
 
-        result.innerHTML = "";
+            const result =
+                document.getElementById("result");
 
-        donors.forEach(donor => {
+            if (donors.length === 0) {
 
-            result.innerHTML += `
+                result.innerHTML =
+                    "<p>No donor found.</p>";
 
-                <div class="donor-card">
+                return;
+            }
 
-                    <h3>${donor.name}</h3>
+            result.innerHTML = "";
 
-                    <p>
-                        Blood Group: ${donor.bloodGroup}
-                    </p>
+            donors.forEach((donor, index) => {
 
-                    <p>
-                        Location: ${donor.location}
-                    </p>
+                result.innerHTML += `
 
-                    <p>
-                        Phone: ${donor.phone}
-                    </p>
+                    <div class="donor-card"
+                         onclick="showDetails(${index})">
 
-                    <p>
-                        Email: ${donor.email}
-                    </p>
+                        <h3>${donor.name}</h3>
 
-                    <p>
-                        Status: ${donor.availability}
-                    </p>
+                        <p>
+                            Blood Group: ${donor.bloodGroup}
+                        </p>
 
-                </div>
+                        <p>
+                            Location: ${donor.location}
+                        </p>
 
-            `;
+                        <div
+                            class="donor-details"
+                            id="details-${index}">
+
+                            <p>
+                                Phone: ${donor.phone}
+                            </p>
+
+                            <p>
+                                Email: ${donor.email}
+                            </p>
+
+                            <p>
+                                Status: ${donor.availability}
+                            </p>
+
+                            <button
+                                class="request-btn"
+                                onclick="requestDonor(
+                                    event,
+                                    ${donor.donorId},
+                                    '${donor.name}',
+                                    '${donor.bloodGroup}',
+                                    '${donor.location}',
+                                    '${donor.phone}',
+                                    '${donor.email}',
+                                    '${donor.availability}'
+                                )">
+
+                                Request This Donor
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Error finding donor!");
 
         });
 
-    })
+}
 
-    .catch(error => {
 
-        console.error(error);
+function showDetails(index) {
 
-        alert("Error finding donor!");
+    const details =
+        document.getElementById("details-" + index);
 
-    });
+    if (details.style.display === "block") {
+
+        details.style.display = "none";
+
+    } else {
+
+        details.style.display = "block";
+
+    }
+
+}
+
+
+function requestDonor(
+    event,
+    donorId,
+    donorName,
+    bloodGroup,
+    location,
+    phone,
+    email,
+    availability
+) {
+
+    event.stopPropagation();
+
+    const selectedDonor = {
+
+        donorId: donorId,
+        name: donorName,
+        bloodGroup: bloodGroup,
+        location: location,
+        phone: phone,
+        email: email,
+        availability: availability
+
+    };
+
+    sessionStorage.setItem(
+        "selectedDonor",
+        JSON.stringify(selectedDonor)
+    );
+
+    alert(
+        "Blood request sent to " + donorName + "!"
+    );
+
+    window.location.href =
+        "donor-requests.html";
 
 }
 

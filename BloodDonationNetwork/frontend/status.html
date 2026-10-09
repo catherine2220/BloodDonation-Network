@@ -1,7 +1,13 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Request Status - BloodConnect</title>
+
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -14,19 +20,14 @@
 
         .status-section h2 {
             color: #b22222;
-            margin-bottom: 30px;
-        }
-
-        #result {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
+            margin-bottom: 25px;
         }
 
         .status-card {
-            width: 360px;
-            padding: 25px;
+            width: 450px;
+            max-width: 90%;
+            margin: auto;
+            padding: 30px;
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
@@ -39,30 +40,53 @@
         }
 
         .status-card p {
-            margin: 8px 0;
+            margin: 12px 0;
         }
 
         .status {
-            font-weight: bold;
-            color: #008000;
-        }
-
-        .emergency {
-            color: #d00000;
-            font-weight: bold;
-        }
-
-        .urgent {
-            color: #e67e00;
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            background: #fff3cd;
+            color: #856404;
             font-weight: bold;
         }
 
-        .normal {
-            color: #008000;
+        .matched {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .fulfilled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .donation-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #b22222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+        }
+
+        .donation-btn:hover {
+            opacity: 0.85;
         }
 
     </style>
+
 </head>
 
 <body>
@@ -80,7 +104,6 @@
         <a href="donation.html">Record Donation</a>
         <a href="status.html">Request Status</a>
         <a href="contact.html">Contact</a>
-
     </div>
 
 </nav>
@@ -90,7 +113,59 @@
 
     <h2>Blood Request Status</h2>
 
-    <div id="result"></div>
+    <div class="status-card">
+
+        <h3>🩸 Request Details</h3>
+
+        <p>
+            <strong>Patient:</strong>
+            <span id="patientName"></span>
+        </p>
+
+        <p>
+            <strong>Blood Group:</strong>
+            <span id="bloodGroup"></span>
+        </p>
+
+        <p>
+            <strong>Units Required:</strong>
+            <span id="unitsRequired"></span>
+        </p>
+
+        <p>
+            <strong>Hospital:</strong>
+            <span id="hospitalName"></span>
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            <span id="hospitalLocation"></span>
+        </p>
+
+        <p>
+            <strong>Donor:</strong>
+            <span id="donorName">Not selected</span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+
+            <span id="statusText" class="status">
+                Pending
+            </span>
+
+        </p>
+
+        <button
+            id="donationButton"
+            class="donation-btn"
+            onclick="recordDonation()">
+
+            Record Donation
+
+        </button>
+
+    </div>
 
 </section>
 
@@ -104,83 +179,134 @@
 
 <script>
 
-fetch("http://localhost:8080/blood-requests")
+/* Get request details from sessionStorage */
 
-.then(response => response.json())
+const patientName =
+    sessionStorage.getItem("patientName");
 
-.then(requests => {
+const bloodGroup =
+    sessionStorage.getItem("bloodGroup");
 
-    const result = document.getElementById("result");
+const unitsRequired =
+    sessionStorage.getItem("unitsRequired");
 
-    if (requests.length === 0) {
+const hospitalName =
+    sessionStorage.getItem("hospitalName");
 
-        result.innerHTML =
-            "<p>No blood requests found.</p>";
+const hospitalLocation =
+    sessionStorage.getItem("hospitalLocation");
 
-        return;
-    }
 
-    requests.forEach(request => {
+/* Display request details */
 
-        let urgencyClass =
-            request.urgencyLevel.toLowerCase();
+document.getElementById("patientName").textContent =
+    patientName || "Not available";
 
-        result.innerHTML += `
+document.getElementById("bloodGroup").textContent =
+    bloodGroup || "Not available";
 
-            <div class="status-card">
+document.getElementById("unitsRequired").textContent =
+    unitsRequired || "Not available";
 
-                <h3>
-                    Patient: ${request.patientName}
-                </h3>
+document.getElementById("hospitalName").textContent =
+    hospitalName || "Not available";
 
-                <p>
-                    Blood Group: ${request.bloodGroup}
-                </p>
+document.getElementById("hospitalLocation").textContent =
+    hospitalLocation || "Not available";
 
-                <p>
-                    Units Required: ${request.unitsRequired}
-                </p>
 
-                <p>
-                    Hospital: ${request.hospitalName}
-                </p>
+/* Get URL parameters */
 
-                <p>
-                    Location: ${request.hospitalLocation}
-                </p>
+const params =
+    new URLSearchParams(window.location.search);
 
-                <p>
-                    Urgency:
-                    <span class="${urgencyClass}">
-                        ${request.urgencyLevel}
-                    </span>
-                </p>
+const status =
+    params.get("status");
 
-                <p>
-                    Status:
-                    <span class="status">
-                        ${request.status}
-                    </span>
-                </p>
+const donorName =
+    params.get("donorName");
 
-            </div>
 
-        `;
+/* Get elements */
 
-    });
+const statusText =
+    document.getElementById("statusText");
 
-})
+const donationButton =
+    document.getElementById("donationButton");
 
-.catch(error => {
 
-    console.error(error);
+/* Display donor */
 
-    document.getElementById("result").innerHTML =
-        "<p>Error loading request status.</p>";
+if (donorName) {
 
-});
+    document.getElementById("donorName").textContent =
+        donorName;
+
+}
+
+
+/* Matched */
+
+if (status === "Matched") {
+
+    statusText.textContent =
+        "Matched";
+
+    statusText.classList.add("matched");
+
+    donationButton.style.display =
+        "inline-block";
+
+}
+
+
+/* Fulfilled */
+
+else if (status === "Fulfilled") {
+
+    statusText.textContent =
+        "Fulfilled";
+
+    statusText.classList.add("fulfilled");
+
+}
+
+
+/* Rejected */
+
+else if (status === "Rejected") {
+
+    statusText.textContent =
+        "Rejected";
+
+    statusText.classList.add("rejected");
+
+}
+
+
+/* Pending */
+
+else {
+
+    statusText.textContent =
+        "Pending";
+
+}
+
+
+/* Record Donation */
+
+function recordDonation() {
+
+    window.location.href =
+        "donation.html";
+
+}
 
 </script>
 
 </body>
+
 </html>
+```

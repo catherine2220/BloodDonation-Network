@@ -90,7 +90,7 @@ document.getElementById("donorForm").addEventListener("submit", function(event) 
         availability: document.getElementById("availability").value
     };
 
-    fetch("http://localhost:8080/donors", {
+    fetch("https://blooddonation-network.onrender.com/donors", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

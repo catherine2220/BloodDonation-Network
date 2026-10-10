@@ -338,6 +338,11 @@ function requestDonor(
         "selectedDonor",
         JSON.stringify(selectedDonor)
     );
+    sessionStorage.setItem(
+    "requestId",
+    new URLSearchParams(window.location.search).get("requestId")
+        || sessionStorage.getItem("requestId")
+);
 
     alert(
         "Blood request sent to " + donorName + "!"

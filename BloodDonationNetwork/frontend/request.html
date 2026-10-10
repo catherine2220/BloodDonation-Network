@@ -206,7 +206,7 @@ document.getElementById("requestForm")
 
             const savedRequest =
                 await response.json();
-
+console.log("Saved blood request:", savedRequest);
             sessionStorage.setItem(
                 "requestId",
                 savedRequest.requestId

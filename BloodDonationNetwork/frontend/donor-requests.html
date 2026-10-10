@@ -298,14 +298,12 @@ async function acceptRequest() {
                 }
             );
 
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to update request status"
-            );
-
-        }
-
+if (!response.ok) {
+    const errorText = await response.text();
+    console.log("Backend error:", response.status, errorText);
+    alert("Backend error: " + response.status + " - " + errorText);
+    return;
+}
         alert(
             "Donation request accepted by " +
             donor.name + "!"
